@@ -1,0 +1,12 @@
+function solution(s) {
+    const stack = [];
+    for (const v of s) {
+        if (v === "(") stack.push(v);
+        else {
+            if (stack.length === 0) return false;
+            stack.pop();
+        }
+    }
+
+    return stack.length === 0;
+}
