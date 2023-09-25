@@ -48,11 +48,13 @@ class CircularLinedList {
         }
         return cur;
     }
+
     // node 뒤에 value추가
     insert(node, value) {
         const newNode = new Node(value);
         newNode.next = node.next;
         node.next = newNode;
+        if (node.next === this.head) this.tail = newNode;
     }
 
     size() {
@@ -85,20 +87,28 @@ class CircularLinedList {
 const cll = new CircularLinedList();
 
 cll.append(1);
-console.log(cll);
 cll.append(2);
-console.log(cll);
 cll.append(3);
 cll.append(4);
-cll.display();
-console.log(cll.find(3));
-cll.remove(3);
-cll.display();
-cll.insert(cll.find(2), 10);
-cll.display();
+cll.insert(cll.find(4), 10);
+console.log(cll);
+console.log(cll.tail);
 
-// size
-console.log(cll.size());
-// 예외처리
-console.log(cll.find(100)); // 없는 값 찾기 error
-cll.remove(100); // 없는 값 제거 error
+// cll.append(1);
+// console.log(cll);
+// cll.append(2);
+// console.log(cll);
+// cll.append(3);
+// cll.append(4);
+// cll.display();
+// console.log(cll.find(3));
+// cll.remove(3);
+// cll.display();
+// cll.insert(cll.find(2), 10);
+// cll.display();
+
+// // size
+// console.log(cll.size());
+// // 예외처리
+// console.log(cll.find(100)); // 없는 값 찾기 error
+// cll.remove(100); // 없는 값 제거 error
