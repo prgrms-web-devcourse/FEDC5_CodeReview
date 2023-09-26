@@ -26,6 +26,13 @@ class CircularLinedList {
 
     remove(value) {
         let prev = this.head;
+        // 노드가 하나 있다면
+        if (!this.head.next) {
+            this.head = null;
+            this.tail = null;
+            return;
+        }
+
         while (prev.next.value !== value) {
             prev = prev.next;
             if (prev.next === this.head) {
@@ -87,6 +94,7 @@ class CircularLinedList {
 const cll = new CircularLinedList();
 
 cll.append(1);
+cll.remove();
 cll.append(2);
 cll.append(3);
 cll.append(4);
@@ -112,3 +120,13 @@ console.log(cll.tail);
 // // 예외처리
 // console.log(cll.find(100)); // 없는 값 찾기 error
 // cll.remove(100); // 없는 값 제거 error
+
+if (currNode.next === this.head) {
+    this.head = null;
+    this.tail = null;
+} else if (currNode.next.next === this.head) {
+    this.head = currNode;
+    this.tail = currNode;
+} else {
+    currNode.next = currNode.next.next;
+}
