@@ -18,17 +18,24 @@ class BinarySearchTree {
 
         let cur = this.root;
         while (cur !== null) {
+            // 현재보다 더 크면 오른쪽에 삽입
             if (cur.value < value) {
+                // 오른쪽이 없다면 바로 삽입
                 if (cur.right === null) {
                     cur.right = newNode;
                     break;
                 }
+                // 오른쪽이 있다면 오른쪽 노드로 이동
                 cur = cur.right;
-            } else {
+            }
+            // 현재보다 더 작으면 왼쪽에 삽입
+            else {
+                // 왼쪽이 없다면 바로 삽입
                 if (cur.left === null) {
                     cur.left = newNode;
                     break;
                 }
+                // 왼쪽이 있다면 왼쪽 노드로 이동
                 cur = cur.left;
             }
         }
@@ -44,6 +51,8 @@ class BinarySearchTree {
         }
         return false;
     }
+
+    delete(v) {}
 }
 
 const tree = new BinarySearchTree();
