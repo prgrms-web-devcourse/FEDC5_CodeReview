@@ -1,34 +1,27 @@
-function solution(tickets) {
-  tickets.sort();
+function solution(n, times) {
+  let answer = 0;
+  times.sort((a, b) => a - b);
 
-  const numOfPaths = tickets.length;
-  const result = [];
-  const visited = [];
-  let answer = [];
+  let l = 1;
+  let r = times[0] * n;
 
-  search('ICN', 0);
+  while (l <= r) {
+    let mid = Math.floor((l + r) / 2);
+    let cnt = 0;
+
+    for (const t of times) {
+      cnt += Math.floor(mid / t);
+
+      if (cnt > n) break;
+    }
+
+    if (cnt < n) {
+      l = mid + 1;
+    } else {
+      r = mid - 1;
+      answer = mid;
+    }
+  }
 
   return answer;
-
-  function search(start, count) {
-    result.push(start);
-
-    if (count === numOfPaths) {
-      answer = result;
-
-      return true;
-    }
-
-    for (let i = 0; i < numOfPaths; i++) {
-      if (!visited[i] && tickets[i][0] === start) {
-        visited[i] = true;
-        if (search(tickets[i][1], count + 1)) return true;
-        visited[i] = false;
-      }
-    }
-
-    result.pop();
-
-    return false;
-  }
 }
