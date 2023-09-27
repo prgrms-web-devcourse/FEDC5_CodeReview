@@ -1,144 +1,163 @@
+/** [DAY 6] 트리를 이용하여 전위 순회, 중위 순회, 후위 순회를 구현
+ * 1. 전위 순회 : root -> left -> right 순으로 순회
+ * 2. 중위 순회 : left -> root -> right 순으로 순회
+ * 3. 후위 순회 : left -> right -> root 순으로 순회
+ */
+
 class Node {
     constructor(value) {
         this.value = value;
+        this.parent = null;
         this.left = null;
         this.right = null;
-        this.parent = null; // 부모노드 추가
     }
 }
 
 class BinarySearchTree {
     root = null;
+    size = 0;
 
     insert(value) {
         const newNode = new Node(value);
-        if (this.root === null) {
+
+        if (!this.root) {
             this.root = newNode;
+            this.size++;
             return;
         }
 
         let cur = this.root;
-        while (cur !== null) {
-            // 현재보다 더 크면 오른쪽에 삽입
+        while (cur) {
+            // value 현재 노드value보다 클 경우 오른쪽에 추가
             if (cur.value < value) {
-                // 오른쪽이 없다면 바로 삽입
-                if (cur.right === null) {
+                if (!cur.right) {
                     cur.right = newNode;
-                    newNode.parent = cur; // 부모노드 추가
+                    newNode.parent = cur;
                     break;
                 }
-                // 오른쪽이 있다면 오른쪽 노드로 이동
                 cur = cur.right;
             }
-            // 현재보다 더 작거나 같으면 왼쪽에 삽입
+            // value 현재 노드value보다 작을 경우 왼쪽에 추가
             else {
-                // 왼쪽이 없다면 바로 삽입
-                if (cur.left === null) {
+                if (!cur.left) {
                     cur.left = newNode;
-                    newNode.parent = cur; // 부모노드 추가
+                    newNode.parent = cur;
                     break;
                 }
-                // 왼쪽이 있다면 왼쪽 노드로 이동
                 cur = cur.left;
             }
         }
+        this.size++;
     }
 
-    has(value) {
-        let cur = this.root;
-        while (cur !== null) {
-            if (cur.value === value) return cur;
-
-            if (cur.value < value) cur = cur.right;
-            else cur = cur.left;
+    find(value) {
+        if (!this.root) {
+            return new Error("트리가 비어있습니다.");
         }
-        return false;
+
+        let curNode = this.root;
+        while (curNode) {
+            // value 찾음
+            if (curNode.value === value) {
+                return curNode;
+            }
+            // value 현재 노드value보다 클 경우 오른쪽에서 탐색, 작으면 왼쪽에서 탐색
+            curNode = curNode.value < value ? curNode.right : curNode.left;
+        }
+
+        return new Error("트리에 찾는 값이 없습니다.");
     }
 
     remove(value) {
-        const target = this.has(value);
-        // console.log("target", target);
-        let cur = target;
-        if (!cur) {
-            console.error("찾는 값이 없습니다.");
-            return false;
+        const targetNode = this.find(value);
+
+        // 삭제 할 노드가 없음
+        if (!targetNode) return new Error("트리에 삭제할 값이 없습니다.");
+
+        this.size--;
+        // case1. 자식노드 0개
+        if (!targetNode.left && !targetNode.right) {
+            targetNode.parent.value < targetNode.value
+                ? (targetNode.parent.right = null)
+                : (targetNode.parent.left = null);
+            return console.log(`${targetNode.value}노드 삭제 성공`);
         }
 
-        // leaf 노드인 경우
-        if (cur.left === null && cur.right === null) {
-            // 삭제할 요소가 부모의 오른쪽 자식일 경우
-            if (cur.parent.value < cur.value) cur.parent.right = null;
-            // 삭제할 요소가 부모의 왼쪽 자식일 경우
-            else cur.parent.left = null;
-
-            return console.log(`${cur.value}삭제 완료`);
+        // case2. 자식노드 1개
+        else if (!targetNode.left) {
+            // 왼쪽이 없다면
+            targetNode.right.parent = targetNode.parent;
+            targetNode.parent.right = targetNode.right;
+            return console.log(`${targetNode.value}노드 삭제 성공`);
+        } else if (!targetNode.right) {
+            // 오른쪽이 없다면
+            targetNode.left.parent = targetNode.parent;
+            targetNode.parent.left = targetNode.left;
+            return console.log(`${targetNode.value}노드 삭제 성공`);
         }
 
-        // 하나의 서브트리를 가지는 경우
-        else if (cur.left === null || cur.right === null) {
-            // 삭제할 요소가 부모의 오른쪽 자식일 경우
-            if (cur.parent.value < cur.value)
-                cur.parent.right = cur.left === null ? cur.right : cur.left;
-            // 삭제할 요소가 부모의 왼쪽 자식일 경우
-            else cur.parent.left = cur.left === null ? cur.right : cur.left;
-        }
-
-        // 두개의 서브트리를 가지는 경우
-        // 1. 삭제할 요소보다 큰 값 중 가장 작은 값(left 요소가 null인 값)을 찾는다.
-        // 2. 가장 작은 값의 오른쪽 서브트리가 있다면 가장 마지막 right값으로 삭제할 요소의 rifht와 연결한다
-        // 3. 가장 작은 값의 부모요소와 연결을 끊고 삭제할 값의 부모와 연결해준다
-        // 4. 가장 작은 값의 left 값으로 삭제할 요소의 left 값을 넣는다
-        // 5. 삭제할 요소의 연결은 모두 끊는다
+        // case2. 자식노드 2개
         else {
-            // 1.
-            cur = cur.right;
-            while (cur.left !== null) {
-                cur = cur.left;
+            // target보다 큰 값 중 가장 작은 값과 교체
+            let minValue = targetNode.right;
+
+            while (minValue.left) minValue = minValue.left;
+
+            // minValue의 right 값이 있다면 => minValue의 parent와 연결
+            if (minValue.right) {
+                minValue.parent.left = minValue.right;
+                minValue.right.parent = minValue.parent;
+            } else {
+                minValue.parent.left = null;
             }
-            // console.log("cur", cur);
+            // minValue에 연결되어있던 노드 제거
 
-            // 2.
-            let right = cur.right;
+            // targetNode에 연결되어있던 노드 => minValue로 연결
+            minValue.parent = targetNode.parent;
+            targetNode.parent.right = minValue;
 
-            while (right.right !== null) {
-                right = right.right;
-            }
-            // console.log("right", right);
+            minValue.left = targetNode.left;
+            targetNode.left.parent = minValue;
 
-            right.right = target.right;
-            target.right.parent = right;
-            // console.log("target.right", target.right);
+            minValue.right = targetNode.right;
+            targetNode.right.parent = minValue;
 
-            // 3.
-            cur.parent.left = null;
-            cur.parent = target.parent;
-            target.parent.right = cur;
-            // console.log("cur.parent", cur.parent);
-
-            // 4.
-            cur.left = target.left;
-            target.left.parent = cur;
-
-            // 검사
-            console.log("target", target);
-            console.log("target.parent", target.parent);
-            console.log("target.left", target.left);
-            console.log("target.right", target.right);
+            return console.log(`${targetNode.value}노드 삭제 성공`);
         }
     }
 }
 
-const tree = new BinarySearchTree();
-tree.insert(2);
-tree.insert(1);
-tree.insert(4);
-tree.insert(3);
-tree.insert(8);
-tree.insert(9);
-tree.insert(7);
-tree.insert(5);
-tree.insert(6);
-// console.log(tree);
-tree.remove(4);
-console.log(tree.has(4));
-// console.log(tree.has(5));
+const bst = new BinarySearchTree();
+bst.insert(0);
+bst.insert(2);
+bst.insert(1);
+bst.insert(8);
+bst.insert(9);
+bst.insert(6);
+bst.insert(7);
+bst.insert(3);
+bst.insert(4);
+bst.insert(5);
+console.log("size:", bst.size);
+
+console.log(bst.root.value);
+console.log(bst.root.right.value);
+console.log(bst.root.right.parent.value);
+console.log(bst.root.right.left.value);
+console.log(bst.root.right.right.value);
+console.log(bst.root.right.right.left.value);
+console.log(bst.root.right.right.left.left.value);
+console.log(bst.root.right.right.left.left.right.value);
+console.log(bst.root.right.right.left.left.right.right.value);
+bst.remove(2);
+console.log("size:", bst.size);
+
+console.log(bst.root.value);
+console.log(bst.root.right.value);
+console.log(bst.root.right.parent.value);
+console.log(bst.root.right.left.value);
+console.log(bst.root.right.right.value);
+console.log(bst.root.right.right.left.value);
+console.log(bst.root.right.right.left.left.value);
+
+module.exports = BinarySearchTree;

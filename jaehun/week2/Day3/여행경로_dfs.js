@@ -22,8 +22,6 @@ function solution(tickets) {
                     grpah[cur][i] = next;
                     list.pop();
                 }
-                // console.log("list: ", list);
-                // console.log("grpah: ", grpah);
             }
         }
     })("ICN");
