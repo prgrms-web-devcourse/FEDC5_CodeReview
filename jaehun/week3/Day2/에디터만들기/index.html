@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link href="index.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <div class="toolbar">
+            <button class="bold" data-command="bold">Bold</button>
+            <button class="italic" data-command="italic">Italic</button>
+            <button class="align-left" data-command="justifyLeft">Align Left</button>
+            <button class="align-center" data-command="justifyCenter">
+                Align Center
+            </button>
+            <button class="align-right" data-command="justifyRight">Align Right</button>
+        </div>
+
+        <!-- contenteditable="true"를 하면 편집이 가능하게 됨 (HTML 태그가 안에서 사용가능하다) -->
+        <div class="editor" contenteditable="true"></div>
+        <script src="index.js"></script>
+    </body>
+</html>
