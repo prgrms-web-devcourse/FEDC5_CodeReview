@@ -1,0 +1,32 @@
+.toolbar {
+    width: 400px;
+    height: 40px;
+    background-color: burlywood;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.toolbar button {
+    height: 24px;
+    border: 2px solid black;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.toolbar button:hover {
+    background-color: gray;
+}
+
+.editor {
+    width: 400px;
+    height: 400px;
+    border: 2px solid black;
+    /* 클릭시 자동으로 아웃라인이 생기는 것을 없애줌 */
+    outline: none;
+    box-sizing: border-box;
+    padding: 16px;
+    font-size: 12px;
+    border-radius: 4px;
+    margin-top: 4px;
+}
