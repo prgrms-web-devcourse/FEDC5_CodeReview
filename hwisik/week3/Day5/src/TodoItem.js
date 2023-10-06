@@ -29,6 +29,5 @@ function TodoItem({ $target, initialState }) {
     `;
     $todoItem.querySelector('span').style.textDecoration = isCompleted ? 'line-through' : 'none';
   };
-  console.log($todoItem)
   this.render();
 }

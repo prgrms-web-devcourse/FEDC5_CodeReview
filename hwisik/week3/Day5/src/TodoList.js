@@ -18,10 +18,11 @@ function TodoList(params) {
   };
 
   this.render = () => {
-    console.log(new TodoItem({ $target: $todoList, initialState: { text: 'test', isCompleted: false }}))
     $todoList.innerHTML = `
     <ul>
-      ${new TodoItem({ $target: $todoList, initialState: { text: 'test', isCompleted: false }})}
+      ${this.state.map(
+        (todo) => new TodoItem({ $target: $todoList, initialState: todo })
+      )}
     </ul>
     `;
     $target.appendChild($todoList);
